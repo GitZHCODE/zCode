@@ -657,7 +657,7 @@ namespace zCode.zMesh
         }
         */
 
-
+/*
         /// <summary>
         /// If using external buffers to store vertex attributes, the number of vertices in the resulting mesh equals the number of halfedges in the given mesh.
         /// </summary>
@@ -686,7 +686,10 @@ namespace zCode.zMesh
             return result;
         }
 
+    */
 
+
+         /*
         /// <summary>
         /// If using external buffers to store vertex attributes, the number of vertices in the resulting mesh the equals the sum of the number of vertices and halfedges in the given mesh.
         /// </summary>
@@ -714,6 +717,7 @@ namespace zCode.zMesh
             //CreateWeaveTopology(mesh, result);
             return result;
         }
+        */
 
         #endregion
     }
