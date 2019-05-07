@@ -330,17 +330,6 @@
     <Compile Include="zRhino\FuncField.cs" />
     <Compile Include="zRhino\RhinoFactory.cs" />
     <Compile Include="zRhino\RhinoUtil.cs" />
-    <Compile Include="zTools\DynamicRemesher.cs" />
-    <Compile Include="zTools\Features\CurveFeature.cs" />
-    <Compile Include="zTools\Features\ExtendedMeshFeature.cs" />
-    <Compile Include="zTools\Features\IFeature.cs" />
-    <Compile Include="zTools\Features\ISurfaceFeature.cs" />
-    <Compile Include="zTools\Features\MeshFeature.cs" />
-    <Compile Include="zTools\Features\PointFeature.cs" />
-    <Compile Include="zTools\LoopGrower.cs" />
-    <Compile Include="zTools\SpaceColonization.cs" />
-    <Compile Include="zTools\SteinerFinder.cs" />
-    <Compile Include="zTools\WaveFunctionCollapse.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
