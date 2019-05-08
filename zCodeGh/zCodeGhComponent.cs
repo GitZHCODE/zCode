@@ -5,6 +5,9 @@ using Grasshopper.Kernel;
 using Rhino.Geometry;
 
 using zCode.zCore;
+using zCode.zField;
+using zCode.zMesh;
+using zCode.zRhino;
 
 // In order to load the result of this wizard, you will also need to
 // add the output bin/ folder of this project to the list of loaded
@@ -51,7 +54,10 @@ namespace zCodeGh
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             Vec3d vec = new Vec3d();
-           
+
+            MeshField3d mField =MeshField3d.Double.Create(new HeMesh3d());
+            
+
         }
 
         /// <summary>
