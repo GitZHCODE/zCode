@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 using Grasshopper.Kernel;
+using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 
 using zCode.zCore;
@@ -14,9 +16,9 @@ using zCode.zRhino;
 // folder in Grasshopper.
 // You can use the _GrasshopperDeveloperSettings Rhino command for that.
 
-namespace zCodeGh
+namespace zCodeGh.Components
 {
-    public class zCodeGhComponent : GH_Component
+    public class NormalShader : GH_Component
     {
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -25,10 +27,10 @@ namespace zCodeGh
         /// Subcategory the panel. If you use non-existing tab or panel names, 
         /// new tabs/panels will automatically be created.
         /// </summary>
-        public zCodeGhComponent()
-          : base("Name", "Nickname",
-              "Description",
-              "zCode", "Subcategory")
+        public NormalShader()
+          : base("Normal Shader", "Normal Shader",
+              "Paint a Mesh based on vertex normal directions",
+              "zCode", "Display")
         {
         }
 
@@ -37,6 +39,9 @@ namespace zCodeGh
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
+            pManager.AddMeshParameter("mesh", "mesh", "Mesh to paint", GH_ParamAccess.item);
+            pManager.AddColourParameter("colors", "colors", "Paint colors", GH_ParamAccess.list);
+            pManager.AddVectorParameter("direction", "dir", "Direction", GH_ParamAccess.item, Vector3d.ZAxis);
         }
 
         /// <summary>
@@ -44,6 +49,7 @@ namespace zCodeGh
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
+            pManager.AddMeshParameter("mesh", "mesh", "Painted Mesh", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -53,10 +59,22 @@ namespace zCodeGh
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            Vec3d vec = new Vec3d();
+            Mesh mesh = null;
+            List<Color> colors = new List<Color>();
+            Vector3d dir = new Vector3d();
 
-            MeshField3d mField =MeshField3d.Double.Create(new HeMesh3d());
-            
+            if (!DA.GetData(0, ref mesh)) return;
+            if (!DA.GetDataList(1, colors)) return;
+            if (!DA.GetData(2, ref dir)) return;
+
+            var norms = mesh.Normals;
+
+            if (norms.Count != mesh.Vertices.Count)
+                norms.ComputeNormals();
+
+            mesh.ColorVertices(i => colors.Lerp(dir * norms[i] * 0.5 + 0.5), true);
+
+            DA.SetData(0, new GH_Mesh(mesh));
 
         }
 
@@ -70,7 +88,7 @@ namespace zCodeGh
             {
                 // You can add image files to your project resources and access them like this:
                 //return Resources.IconForThisComponent;
-                return null;
+                return zCodeGh.Properties.Resources.SlurDisplay;
             }
         }
 
