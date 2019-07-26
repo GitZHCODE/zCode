@@ -138,6 +138,21 @@ namespace zCode.zRhino
 
 
         /// <summary>
+        /// 
+        /// 
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static List<Line> GetIsoCurve(this Mesh mesh, IReadOnlyList<double> vertexValues, double threshold)
+        {
+            // TODO implement
+            throw new NotImplementedException();
+
+        }
+
+
+
+        /// <summary>
         /// Returns the entries of the cotangent-weighted Laplacian matrix in column-major order.
         /// Based on symmetric derivation of the Laplace-Beltrami operator detailed in http://www.cs.jhu.edu/~misha/ReadingSeminar/Papers/Vallet08.pdf.
         /// Also returns the barycentric dual area of each vertex.

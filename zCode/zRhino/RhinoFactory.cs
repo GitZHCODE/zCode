@@ -609,11 +609,314 @@ namespace zCode.zRhino
             /// <param name="vertexValues"></param>
             /// <param name="interval"></param>
             /// <returns></returns>
-            public static T CreateIsoTrim(T mesh, IReadOnlyList<double> vertexValues, Intervald interval)
+            public static T CreateIsoTrim(T mesh, IReadOnlyList<double> vertexValues, Interval interval)
             {
-                // TODO implement
-                throw new NotImplementedException();
+
+                //TO DO 
+                //implement multithread version 
+                //remove degenerate case, vertex value equal to threshold
+
+                // input mesh must be triangulated
+                mesh.Faces.ConvertQuadsToTriangles();
+
+                interval = AdjustInterval(interval);
+
+                T _a = new T(); //band within the interval 
+                T _b = new T(); //band outside the interval
+
+                foreach (MeshFace mf in mesh.Faces)
+                {
+
+                    Point3d p0 = mesh.Vertices[mf.A];
+                    Point3d p1 = mesh.Vertices[mf.B];
+                    Point3d p2 = mesh.Vertices[mf.C];
+
+                    double t0 = vertexValues[mf.A];
+                    double t1 = vertexValues[mf.B];
+                    double t2 = vertexValues[mf.C];
+
+
+                    //Create a mask based on face vertex values
+                    int mask = 0;
+
+                    if (interval.IncludesParameter(t0)) { mask += 1; }
+                    if (t0 > interval.T1) { mask += 2; }
+
+                    if (interval.IncludesParameter(t1)) { mask += 3; }
+                    if (t1 > interval.T1) { mask += 6; }
+
+                    if (interval.IncludesParameter(t2)) { mask += 9; }
+                    if (t2 > interval.T1) { mask += 18; }
+
+                    List<Point3d> verts;
+
+                    switch (mask)
+                    {
+                        case 0:
+
+                            verts = new List<Point3d>();
+                            verts.Add(p0);
+                            verts.Add(p1);
+                            verts.Add(p2);
+                            AddFace(_a, verts);
+                            break;
+
+                        case 1:
+                            Split(_a, _b, p0, p1, p2, Normalize(t0, t1, interval.T0), Normalize(t0, t2, interval.T0));
+                            break;
+                        case 2:
+                            Trapezoid(_a, _b, p0, p1, p2, Normalize(t0, t1, interval.T1), Normalize(t0, t1, interval.T0), Normalize(t0, t2, interval.T1), Normalize(t0, t2, interval.T0));
+                            break;
+                        case 3:
+                            Split(_a, _b, p1, p2, p0, Normalize(t1, t2, interval.T0), Normalize(t1, t0, interval.T0));
+                            break;
+                        case 4:
+                            Split(_b, _a, p2, p0, p1, Normalize(t2, t0, interval.T0), Normalize(t2, t1, interval.T0));
+                            break;
+                        case 5:
+                            Pentagon(_a, _b, p1, p2, p0, Normalize(t1, t2, interval.T0), Normalize(t1, t0, interval.T1), Normalize(t2, t0, interval.T0), Normalize(t2, t0, interval.T1));
+                            break;
+                        case 6:
+                            Trapezoid(_a, _b, p1, p2, p0, Normalize(t1, t2, interval.T1), Normalize(t1, t2, interval.T0), Normalize(t1, t0, interval.T1), Normalize(t1, t0, interval.T0));
+                            break;
+                        case 7:
+                            Pentagon(_a, _b, p0, p1, p2, Normalize(t0, t1, interval.T1), Normalize(t0, t2, interval.T0), Normalize(t1, t2, interval.T1), Normalize(t1, t2, interval.T0));
+                            break;
+                        case 8:
+                            Trapezoid(_a, _b, p2, p0, p1, Normalize(t2, t0, interval.T0), Normalize(t2, t0, interval.T1), Normalize(t2, t1, interval.T0), Normalize(t2, t1, interval.T1));
+                            break;
+                        case 9:
+                            Split(_a, _b, p2, p0, p1, Normalize(t2, t0, interval.T0), Normalize(t2, t1, interval.T0));
+                            break;
+                        case 10:
+                            Split(_b, _a, p1, p2, p0, Normalize(t1, t2, interval.T0), Normalize(t1, t0, interval.T0));
+                            break;
+                        case 11:
+                            Pentagon(_a, _b, p2, p0, p1, Normalize(t2, t0, interval.T1), Normalize(t2, t1, interval.T0), Normalize(t0, t1, interval.T1), Normalize(t0, t1, interval.T0));
+                            break;
+                        case 12:
+                            Split(_b, _a, p0, p1, p2, Normalize(t0, t1, interval.T0), Normalize(t0, t2, interval.T0));
+                            break;
+                        case 13:
+                            verts = new List<Point3d>();
+                            verts.Add(p0);
+                            verts.Add(p1);
+                            verts.Add(p2);
+                            AddFace(_b, verts);
+                            break;
+                        case 14:
+                            Split(_b, _a, p0, p1, p2, Normalize(t0, t1, interval.T1), Normalize(t0, t2, interval.T1));
+                            break;
+                        case 15:
+                            Pentagon(_a, _b, p2, p0, p1, Normalize(t2, t0, interval.T0), Normalize(t2, t1, interval.T1), Normalize(t0, t1, interval.T0), Normalize(t0, t1, interval.T1));
+                            break;
+                        case 16:
+                            Split(_b, _a, p1, p2, p0, Normalize(t1, t2, interval.T1), Normalize(t1, t0, interval.T1));
+                            break;
+                        case 17:
+                            Split(_a, _b, p2, p0, p1, Normalize(t2, t0, interval.T1), Normalize(t2, t1, interval.T1));
+                            break;
+                        case 18:
+                            Trapezoid(_a, _b, p2, p0, p1, Normalize(t2, t0, interval.T1), Normalize(t2, t0, interval.T0), Normalize(t2, t1, interval.T1), Normalize(t2, t1, interval.T0));
+                            break;
+                        case 19:
+                            Pentagon(_a, _b, p0, p1, p2, Normalize(t0, t1, interval.T0), Normalize(t0, t2, interval.T1), Normalize(t1, t2, interval.T0), Normalize(t1, t2, interval.T1));
+                            break;
+                        case 20:
+                            Trapezoid(_a, _b, p1, p2, p0, Normalize(t1, t2, interval.T0), Normalize(t1, t2, interval.T1), Normalize(t1, t0, interval.T0), Normalize(t1, t0, interval.T1));
+                            break;
+                        case 21:
+                            Pentagon(_a, _b, p1, p2, p0, Normalize(t1, t2, interval.T1), Normalize(t1, t0, interval.T0), Normalize(t2, t0, interval.T1), Normalize(t2, t0, interval.T0));
+                            break;
+                        case 22:
+                            Split(_b, _a, p2, p0, p1, Normalize(t2, t0, interval.T1), Normalize(t2, t1, interval.T1));
+                            break;
+                        case 23:
+                            Split(_a, _b, p1, p2, p0, Normalize(t1, t2, interval.T1), Normalize(t1, t0, interval.T1));
+                            break;
+                        case 24:
+                            Trapezoid(_a, _b, p0, p1, p2, Normalize(t0, t1, interval.T0), Normalize(t0, t1, interval.T1), Normalize(t0, t2, interval.T0), Normalize(t0, t2, interval.T1));
+                            break;
+                        case 25:
+                            Split(_a, _b, p0, p1, p2, Normalize(t0, t1, interval.T1), Normalize(t0, t2, interval.T1));
+                            break;
+                        case 26:
+                            verts = new List<Point3d>();
+                            verts.Add(p0);
+                            verts.Add(p1);
+                            verts.Add(p2);
+                            AddFace(_a, verts);
+                            break;
+                    }
+                }
+
+                return _b;
+
+
+                void Split(T m0, T m1, Point3d p0, Point3d p1, Point3d p2, double t0, double t1)
+                {
+                    Point3d p01 = Lerp(p0, p1, t0);
+                    Point3d p02 = Lerp(p0, p2, t1);
+
+                    //gets the quad
+                    List<Point3d> verts;
+                    verts = new List<Point3d>();
+                    verts.Add(p1);
+                    verts.Add(p2);
+                    verts.Add(p02);
+                    verts.Add(p01);
+                    AddFace(m0, verts);
+
+                    //get the tri
+                    verts = new List<Point3d>();
+                    verts.Add(p0);
+                    verts.Add(p01);
+                    verts.Add(p02);
+                    AddFace(m1, verts);
+                }
+
+                void Trapezoid(T m0, T m1, Point3d p0, Point3d p1, Point3d p2, double t0a, double t0b, double t1a, double t1b)
+                {
+                    Point3d p01a = Lerp(p0, p1, t0a);
+                    Point3d p01b = Lerp(p0, p1, t0b);
+
+                    Point3d p02a = Lerp(p0, p2, t1a);
+                    Point3d p02b = Lerp(p0, p2, t1b);
+
+                    //gets the quad
+                    List<Point3d> verts;
+                    verts = new List<Point3d>();
+                    verts.Add(p1);
+                    verts.Add(p2);
+                    verts.Add(p02b);
+                    verts.Add(p01b);
+                    AddFace(m0, verts);
+
+                    //gets the quad
+                    verts = new List<Point3d>();
+                    verts.Add(p01b);
+                    verts.Add(p02b);
+                    verts.Add(p02a);
+                    verts.Add(p01a);
+                    AddFace(m1, verts);
+
+                    //get the tri
+                    verts = new List<Point3d>();
+                    verts.Add(p0);
+                    verts.Add(p01a);
+                    verts.Add(p02a);
+                    AddFace(m0, verts);
+                }
+
+
+                void Pentagon(T m0, T m1, Point3d p0, Point3d p1, Point3d p2, double t0, double t1, double t2a, double t2b)
+                {
+                    Point3d p01 = Lerp(p0, p1, t0);
+
+                    Point3d p02 = Lerp(p0, p2, t1);
+
+                    Point3d p03a = Lerp(p1, p2, t2a);
+                    Point3d p03b = Lerp(p1, p2, t2b);
+
+                    List<Point3d> verts;
+
+                    //get the tri
+                    verts = new List<Point3d>();
+                    verts.Add(p0);
+                    verts.Add(p01);
+                    verts.Add(p02);
+                    AddFace(m1, verts);
+
+                    //gets the quad
+                    verts = new List<Point3d>();
+                    verts.Add(p02);
+                    verts.Add(p01);
+                    verts.Add(p03a);
+                    verts.Add(p03b);
+                    AddFace(m1, verts);
+
+                    //get the tri
+                    verts = new List<Point3d>();
+                    verts.Add(p01);
+                    verts.Add(p03a);
+                    verts.Add(p1);
+                    AddFace(m0, verts);
+
+                    //get the tri
+                    verts = new List<Point3d>();
+                    verts.Add(p02);
+                    verts.Add(p03b);
+                    verts.Add(p2);
+                    AddFace(m0, verts);
+                }
+
+
+
+                void AddFace(T m, List<Point3d> verts)
+                {
+
+                    if (verts.Count == 3)
+                    {
+                        m.Vertices.Add(verts[0]);
+                        m.Vertices.Add(verts[1]);
+                        m.Vertices.Add(verts[2]);
+                        
+                        int count = m.Vertices.Count;
+                        m.Faces.AddFace(count - 3, count - 2, count - 1);
+
+                        
+                    }
+                    else if (verts.Count == 4)
+                    {
+                        m.Vertices.Add(verts[0]);
+                        m.Vertices.Add(verts[1]);
+                        m.Vertices.Add(verts[2]);
+                        m.Vertices.Add(verts[3]);
+                        int count = m.Vertices.Count;
+                        m.Faces.AddFace(count - 4, count - 3, count - 2, count - 1);
+                    }
+                    else if (verts.Count == 5)
+                    {
+                        m.Vertices.Add(verts[0]);
+                        m.Vertices.Add(verts[1]);
+                        m.Vertices.Add(verts[2]);
+                        m.Vertices.Add(verts[3]);
+                        m.Vertices.Add(verts[4]);
+                        int count = m.Vertices.Count;
+
+                        m.Faces.AddFace(count - 4, count - 3, count - 2, count - 1);
+                        m.Faces.AddFace(count - 5, count - 4, count - 3);
+                    }
+                }
+
+
+
+                Point3d Lerp(Point3d p0, Point3d p1, double t)
+                {
+                    return p0 + (p1 - p0) * t;
+                }
+
+                double Normalize(double t0, double t1, double t)
+                {
+                    return (t - t0) / (t1 - t0);
+                }
+
+                Interval AdjustInterval(Interval _interval)
+                {
+                    if (_interval.T0 > _interval.T1)
+                    {
+                        return _interval = new Interval(_interval.T1, _interval.T0);
+                    }
+                    else
+                    {
+                        return _interval;
+                    }
+                }
             }
+
+
+
+
         }
     }
 }

@@ -8,7 +8,10 @@ namespace zTools
 {
     public class WaveFunctionCollapse
     {
-        //TO DO import from previous version of Zcode
-
+        WaveFunctionCollapse()
+        {
+            //TO DO import from archieved design sketches
+            throw new NotImplementedException();
+        }
     }
 }

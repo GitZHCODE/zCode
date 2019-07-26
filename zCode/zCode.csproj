@@ -254,8 +254,6 @@
     <Compile Include="zField\Interfaces\IField3d.cs" />
     <Compile Include="zField\Interfaces\IGradient2d.cs" />
     <Compile Include="zField\Interfaces\IGradient3d.cs" />
-    <Compile Include="zField\Isoband.cs" />
-    <Compile Include="zField\Isoline.cs" />
     <Compile Include="zField\Isosurface.cs" />
     <Compile Include="zField\MeshField3dDouble.cs" />
     <Compile Include="zField\MeshField3dVec3d.cs" />
