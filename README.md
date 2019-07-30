@@ -1,3 +1,2 @@
 # zCode
-zCode is a library of geometric data structures and algorithms written in C# and compiled against .NET 4.7.1.
-The library is currently developed by Tommaso Casucci and continue the effort initiated by David Reeves (Spatial Slur) at Zaha Hadid Architects. 
+zCode is a library of geometric data structures and algorithms written in C# and compiled against .NET 4.7.1. The library originally branches from Spatial Slur library, developed by David Reeves while working at Zaha Hadid Architects and is currently mainly developed by Tommaso Casucci. 
