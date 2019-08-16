@@ -11,6 +11,7 @@ using zCode.zField;
 using zCode.zMesh;
 using zCode.zRhino;
 
+
 // In order to load the result of this wizard, you will also need to
 // add the output bin/ folder of this project to the list of loaded
 // folder in Grasshopper.
@@ -75,6 +76,7 @@ namespace zCodeGh.Components
             mesh.ColorVertices(i => colors.Lerp(dir * norms[i] * 0.5 + 0.5), true);
 
             DA.SetData(0, new GH_Mesh(mesh));
+
 
         }
 

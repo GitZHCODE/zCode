@@ -2578,6 +2578,56 @@ namespace zCode.zMesh
 
 
         /// <summary>
+        /// The MeshCurvature class estimates principal curvatures and principal
+        /// directions at the vertices of a manifold triangle mesh.  The algorithm
+        /// is described in
+        /// https://www.geometrictools.com/Documentation/MeshDifferentialGeometry.pdf
+        /// and
+        /// https://www.geometrictools.com/GTEngine/Include/Mathematics/GteMeshCurvature.h
+        /// </summary>
+        public static void GetPrincipalCurvatures<V, E, F>(this HeStructure<V, E, F> mesh, Action<V, double> setCurvature, bool parallel = false)
+            where V : HeVertex<V, E, F>
+            where E : Halfedge<V, E, F>
+            where F : HeFace<V, E, F>
+        {
+
+            //TO DO 
+
+            /*
+            var verts = mesh.Vertices;
+
+            if (parallel)
+                Parallel.ForEach(Partitioner.Create(0, verts.Count), range => Body(range.Item1, range.Item2));
+            else
+                Body(0, verts.Count);
+
+            void Body(int from, int to)
+            {
+                for (int i = from; i < to; i++)
+                {
+                    var v = verts[i];
+                    if (v.IsUnused) continue;
+
+                    if (v.IsBoundary)
+                    {
+                        setCurvature(v, 0.0);
+                    }
+                    else
+                    {
+
+                   //Implement method here
+               
+
+                    }
+                }
+            }
+
+            */
+        }
+
+
+
+        /// <summary>
         /// Calculates vertex normals as the area-weighted sum of halfedge normals around each vertex.
         /// Vertex normals are unitized by default.
         /// http://libigl.github.io/libigl/tutorial/tutorial.html#normals

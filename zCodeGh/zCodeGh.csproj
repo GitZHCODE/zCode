@@ -76,8 +76,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Params\HeGraph3dParam.cs" />
+    <Compile Include="Params\HeMesh3dParam.cs" />
+    <Compile Include="Types\GH_HeGraph3d.cs" />
     <Compile Include="Components\DepthShader.cs" />
     <Compile Include="Components\NormalShader.cs" />
+    <Compile Include="Types\GH_HeMesh3d.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -101,6 +105,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\SlurDisplay.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SlurParam.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

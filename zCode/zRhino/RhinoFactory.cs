@@ -614,12 +614,12 @@ namespace zCode.zRhino
 
                 //TO DO 
                 //implement multithread version 
-                //remove degenerate case, vertex value equal to threshold
+                //Known issues: degenerate case, vertex value equal to threshold
 
                 // input mesh must be triangulated
                 mesh.Faces.ConvertQuadsToTriangles();
 
-                interval = AdjustInterval(interval);
+                interval = SortInterval(interval);
 
                 T _a = new T(); //band within the interval 
                 T _b = new T(); //band outside the interval
@@ -901,7 +901,7 @@ namespace zCode.zRhino
                     return (t - t0) / (t1 - t0);
                 }
 
-                Interval AdjustInterval(Interval _interval)
+                Interval SortInterval(Interval _interval)
                 {
                     if (_interval.T0 > _interval.T1)
                     {
@@ -913,9 +913,6 @@ namespace zCode.zRhino
                     }
                 }
             }
-
-
-
 
         }
     }
