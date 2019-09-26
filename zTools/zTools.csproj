@@ -33,7 +33,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rhino Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>bin\RhinoDebug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;USING_RHINO</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -43,7 +43,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rhino Release|AnyCPU'">
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>bin\RhinoRelease\</OutputPath>
     <DefineConstants>TRACE;USING_RHINO</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -74,6 +74,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="zCode">
+      <HintPath>..\zCode\bin\RhinoRelease\zCode.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -92,15 +95,9 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\zCode\zCode.csproj">
-      <Project>{9772d0ef-b832-4b47-b226-9bf380934c2e}</Project>
-      <Name>zCode</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>Copy "$(TargetPath)" "C:\Users\tommaso.c\AppData\Roaming\Grasshopper\Libraries\zCode\"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
