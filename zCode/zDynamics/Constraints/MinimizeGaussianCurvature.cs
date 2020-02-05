@@ -175,15 +175,13 @@ namespace zCode.zDynamics
         public void GetNormalGrad(IReadOnlyList<IBody> bodies, double epsilon)
         {
             double g = GetGaussian(bodies[_handle].Position, bodies);
-            Vec3d n = GetNormal(bodies[_handle].Position, bodies);
+            Vec3d n = ComputeNormal(bodies);
 
             Vec3d s0 = bodies[_handle].Position - n * epsilon;
             double g0 = GetGaussian(s0, bodies);
 
             Vec3d s1 = bodies[_handle].Position + n * epsilon;
             double g1 = GetGaussian(s1, bodies);
-
-
 
             double edgeLenSum = 0.00;
 
@@ -195,6 +193,7 @@ namespace zCode.zDynamics
 
             double avgEdgeLen = edgeLenSum / Neighbors.Count;
 
+
             double mag = g * avgEdgeLen * 0.1;         
             double grad = Math.Sign(g0 - g1);   
             Vec3d result = n * grad * mag;
@@ -205,7 +204,6 @@ namespace zCode.zDynamics
        
 
             _handle.Delta = result;
-
 
         }
 
@@ -245,36 +243,30 @@ namespace zCode.zDynamics
         }
 
 
+
         /// <summary>
-        /// gets an approximation of Normal Vector with respect of the current particle
+        /// Calculates the normal as the sum of triangle area gradients
         /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="neighbors"></param>
         /// <returns></returns>
-        public Vec3d GetNormal(Vec3d pos, IReadOnlyList<IBody> bodies)
+        private Vec3d ComputeNormal(IReadOnlyList<IBody> bodies)
         {
+            var p = bodies[_handle].Position;
 
-            Vec3d norm = new Vec3d();
+            var sum = new Vec3d();
+            var n = _neighbors.Count;
 
-            for (int i = 0; i < Neighbors.Count - 1; i++)
+            for (int i = 0; i < n; i++)
             {
-                Vec3d v0 = bodies[Neighbors[i]].Position - pos;
-                Vec3d v1 = bodies[Neighbors[i + 1]].Position - pos;
-                norm += Vec3d.Cross(v0,v1);
+                int j = (i + 1) % n;
+                var p0 = bodies[_neighbors[i]].Position;
+                var p1 = bodies[_neighbors[j]].Position;
+                sum += GeometryUtil.GetTriAreaGradient(p, p0, p1);
             }
 
-
-            Vec3d vlast = bodies[Neighbors[Neighbors.Count - 1]].Position - pos;
-            Vec3d vfirst = bodies[Neighbors[0]].Position - pos;
-            norm += Vec3d.Cross(vlast, vfirst);
-
-            norm /= Neighbors.Count;
-
-           
-
-            return norm;
+            return sum;
         }
 
+ 
 
         #region Explicit interface implementations
 
