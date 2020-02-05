@@ -14,7 +14,7 @@ namespace zTools
         
 
         SpaceColonization(){
-            //TO DO import from archieved design sketches
+            //TO DO import from design sketches
             throw new NotImplementedException();
         }
 

@@ -626,7 +626,6 @@ namespace zCode.zRhino
 
                 foreach (MeshFace mf in mesh.Faces)
                 {
-
                     Point3d p0 = mesh.Vertices[mf.A];
                     Point3d p1 = mesh.Vertices[mf.B];
                     Point3d p2 = mesh.Vertices[mf.C];

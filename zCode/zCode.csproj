@@ -170,6 +170,7 @@
     <Compile Include="zDynamics\Constraints\LaplacianSmooth.cs" />
     <Compile Include="zDynamics\Constraints\MinimizeArea.cs" />
     <Compile Include="zDynamics\Constraints\MinimizeDistance.cs" />
+    <Compile Include="zDynamics\Constraints\MinimizeGaussianCurvature.cs" />
     <Compile Include="zDynamics\Constraints\OnCircle.cs" />
     <Compile Include="zDynamics\Constraints\OnCurve.cs" />
     <Compile Include="zDynamics\Constraints\OnExtendedMesh.cs" />
@@ -348,7 +349,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-</PostBuildEvent>
+    <PostBuildEvent>Copy "$(TargetPath)" "C:\Users\tommaso.c\AppData\Roaming\Grasshopper\Libraries\zCode\"</PostBuildEvent>
   </PropertyGroup>
 </Project>
