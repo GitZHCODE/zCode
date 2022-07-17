@@ -220,7 +220,9 @@ namespace zCode.zMesh
             do
             {
                 if (he.Twin.Face == null)
+                    {
                     if (!he.IsAtDegree3) break;
+                    }
                 else
                     if (he.Start.IsBoundary || !he.IsAtDegree(4)) break;
 
@@ -236,7 +238,9 @@ namespace zCode.zMesh
                 he = he.Next.Twin.Next;
 
                 if (he.Twin.Face == null)
+                    {
                     if (!he.IsAtDegree3) break;
+                    }
                 else
                     if (he.Start.IsBoundary || !he.IsAtDegree(4)) break;
 
