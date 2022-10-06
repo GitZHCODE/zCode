@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Zaha Hadid Architects")]
 [assembly: AssemblyProduct("zCode")]
-[assembly: AssemblyCopyright("Copyright © Zaha Hadid Architects 2019")]
+[assembly: AssemblyCopyright("Copyright © Zaha Hadid Architects 2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

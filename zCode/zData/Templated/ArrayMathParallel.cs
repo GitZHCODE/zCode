@@ -1,9 +1,4 @@
 ﻿
-
-
-
-
-
 /*
  * Notes
  */
@@ -30,7 +25,6 @@ namespace zCode.zData
 		public static partial class Parallel
 		{
 			#region Common
-
 
 			#region double
 
@@ -387,7 +381,6 @@ namespace zCode.zData
 
 			#endregion
 
-
 			#region float
 
             /// <summary>
@@ -742,7 +735,6 @@ namespace zCode.zData
             }
 
 			#endregion
-
 
 			#region Vec2d
 
@@ -1099,7 +1091,6 @@ namespace zCode.zData
 
 			#endregion
 
-
 			#region Vec3d
 
             /// <summary>
@@ -1455,11 +1446,9 @@ namespace zCode.zData
 
 			#endregion
 
-
 			#endregion
 
             #region Scalar
-
 
 		    #region double
 
@@ -1690,7 +1679,6 @@ namespace zCode.zData
 
             #endregion
 
-
 		    #region float
 
             /// <summary>
@@ -1920,11 +1908,9 @@ namespace zCode.zData
 
             #endregion
 
-
             #endregion
 
 			#region Vector
-
 
 			#region Vec2d
 
@@ -2437,7 +2423,6 @@ namespace zCode.zData
 
 			#endregion
 
-
 			#region Vec3d
 
 			/// <summary>
@@ -2948,7 +2933,6 @@ namespace zCode.zData
             }
 
 			#endregion
-
 
 			#endregion
 		}
