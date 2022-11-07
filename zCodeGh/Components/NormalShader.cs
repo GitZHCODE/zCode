@@ -7,8 +7,6 @@ using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 
 using zCode.zCore;
-using zCode.zField;
-using zCode.zMesh;
 using zCode.zRhino;
 
 
