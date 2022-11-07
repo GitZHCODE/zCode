@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Linq;
 
 using Rhino.Geometry;
 using zCode.zCore;
@@ -138,18 +139,79 @@ namespace zCode.zRhino
 
 
         /// <summary>
-        /// 
+        /// Return iso-countour lines of a mesh based vertex values
         /// 
         /// 
         /// </summary>
         /// <returns></returns>
-        public static List<Line> GetIsoCurve(this Mesh mesh, IReadOnlyList<double> vertexValues, double threshold)
-        {
-            // TODO implement
-            throw new NotImplementedException();
+        public static List<Line> GetIsoCurve(this Mesh mesh, IReadOnlyList<double> vertexValues, double level)
+            {
+            //input mesh must be triangulated
+            mesh.Faces.ConvertQuadsToTriangles();
 
-        }
+            var faces = mesh.Faces;
+            var vals = vertexValues;
+            List<Line> iso = new List<Line>();
 
+            foreach (MeshFace mf in mesh.Faces)
+                {
+                Point3d p0 = mesh.Vertices[mf.A];
+                Point3d p1 = mesh.Vertices[mf.B];
+                Point3d p2 = mesh.Vertices[mf.C];
+
+                double t0 = vertexValues[mf.A];
+                double t1 = vertexValues[mf.B];
+                double t2 = vertexValues[mf.C];
+
+                int mask = 0;
+                if (t0 >= level) { mask |= 1; }
+                if (t1 >= level) { mask |= 2; }
+                if (t2 >= level) { mask |= 4; }
+
+                switch (mask)
+                    {
+                    case 0:
+                        break;
+                    case 1:
+                        iso.Add(GetLine(p0, p1, p2, zMath.Normalize(level, t0, t1), zMath.Normalize(level, t0, t2)));
+                        break;
+                    case 2:
+                        iso.Add(GetLine(p1, p2, p0, zMath.Normalize(level, t1, t2), zMath.Normalize(level, t1, t0)));
+                        break;
+                    case 3:
+                        iso.Add(GetLine(p2, p0, p1, zMath.Normalize(level, t2, t0), zMath.Normalize(level, t2, t1)));
+                        break;
+                    case 4:
+                        iso.Add(GetLine(p2, p0, p1, zMath.Normalize(level, t2, t0), zMath.Normalize(level, t2, t1)));
+                        break;
+                    case 5:
+                        iso.Add(GetLine(p1, p2, p0, zMath.Normalize(level, t1, t2), zMath.Normalize(level, t1, t0)));
+                        break;
+                    case 6:
+                        iso.Add(GetLine(p0, p1, p2, zMath.Normalize(level, t0, t1), zMath.Normalize(level, t0, t2)));
+                        break;
+                    case 7:
+                        break;
+                    }
+                }
+
+            return iso;
+
+            //Return the mesh tri-face isoline 
+            Line GetLine(Point3d p0, Point3d p1, Point3d p2, double t01, double t02)
+                {
+                Point3d p01 = LerpPoint(p0, p1, t01);
+                Point3d p02 = LerpPoint(p0, p2, t02);
+                return new Line(p01, p02);
+                }
+
+            //Linear Interpolation of two Rhino Point3d 
+            Point3d LerpPoint(Point3d p0, Point3d p1, double t)
+                {
+                return p0 + (p1 - p0) * t;
+                }
+
+            }
 
 
         /// <summary>
